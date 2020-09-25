@@ -24,18 +24,18 @@ Note that removing the container, will not automatically remove this volume !  S
 
 ### Unexpected behaviour when used with `docker-compose`
 
-If you want to use docker images which also contains the Node-RED flows and want to use this docker image in a docker-compose file then deploying a new version of the image using the standard docker-compose instructions won't work.
+This section explains unexpected behaviour when using docker images containing also the flows based on old Node-RED docker images (v1.1.3 and earlier) in combination of docker-compose.
 
 The problem scenario:
 
 1. Someone creates a docker image `Img:1.0.0` which contains the Node-RED flow `Flow_1.0.0`
-2. You have created a docker-compose file defining a service using this `Img:2.0.0`
+2. You have created a docker-compose file defining a service using this `Img:1.0.0`
 3. The command "`docker-compose up`" will properly start this service and the very first time will create an anonymous volume that is mounted to the `/data` folder where the flow `Flow_1.0.0` is copied to.
-4. Someone updates the docker image `Img:2.0.0` which now contains the updated Node-RED flows `Flow_2.0.0`.
-5. I want to use the new version of the image, so I run first the `docker-compose pull` command.  Which will correctly download image`Img:2.0.0`
-6. then I run command "`docker-compose up`" to deploy the new version but this will indeed deploy the new version of the image but it won't create a new volume: it will still use the same volume created in step 3.  This also means that it will NOT copy flow `FLow_2.0.0` from the image to the mounted volume and consequently will still use the old flow `Flow_1.0.0`.
+4. Someone updates the docker image (= `Img:2.0.0`) which now contains the updated Node-RED flows `Flow_2.0.0`.
+5. You want to use the new version of the image, so You run first the `docker-compose pull` command.  Which will correctly download image `Img:2.0.0`
+6. then you run command "`docker-compose up`" to deploy the new version but this will indeed deploy the new version of the image but it won't create a new volume: it will still use the same volume created in step 3.  This also means that it will NOT copy flow `FLow_2.0.0` from the image to the mounted volume and consequently it will still use the old flow `Flow_1.0.0` instead of the new flow `Flow_2.0.0`
 
-So in order to avoid this problem you must explicitly remove the "anonymous volume" before running step 6.
+So in order to avoid this problem you must explicitly remove the "anonymous volume" before executing step 6.
 
 FYI it is especially the "`(preserving mounted volumes)`" in the following paragraph of  [docker-compose up documentation](https://docs.docker.com/compose/reference/up/) that explains why we have this problem with docker-compose.
 
@@ -61,3 +61,7 @@ So when upgrading a service to use a new Node-RED docker image (= image without 
 ... but this might also be an undesired thing, in case you want to use the flows in the "`/data`" folders of the new docker image.  The fix for this is easy.  You first have to remove the respective docker container and only then run the "`docker-compose up`" command as this command will now rebuild the container without mounting any volume.
 
 When upgrading from one image to another image and both images are based on a recent Node-RED docker image (= image without the "`VOLUME [/data]`") AND there was no preserved mount of the `/data` folder then the `/data` folder is completely replaced by the `/data` folder of the new image !
+
+# Support
+
+If you are still stuck or need more support then we recommend to open a topic in the [Node-RED forum](https://discourse.nodered.org/) for this.
