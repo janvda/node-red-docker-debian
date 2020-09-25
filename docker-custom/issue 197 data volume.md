@@ -24,7 +24,7 @@ Note that removing the container, will not automatically remove this volume !  S
 
 ### Unexpected behaviour when used with `docker-compose`
 
-This section explains unexpected behaviour when using docker images containing also the flows based on old Node-RED docker images (v1.1.3 and earlier) in combination of docker-compose.
+This section explains unexpected behaviour when using docker images containing also the flows based on old Node-RED docker images (v1.1.3 and earlier) in combination with docker-compose.
 
 The problem scenario:
 
