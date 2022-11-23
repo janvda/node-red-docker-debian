@@ -1,5 +1,5 @@
 ARCH=amd64 
-NODE_VERSION=16
+NODE_VERSION=18
 OS=buster-slim
 NODE_RED_VERSION:=$(shell grep -oE "\"node-red\": \"(\w*.\w*.\w*.\w*.\w*.)" package.json | cut -d\" -f4)
 
