@@ -8,7 +8,7 @@ FROM ${ARCH}/node:${NODE_VERSION}-${OS} AS base
 # Copy scripts
 COPY scripts/*.sh /tmp/
 
-# Install tools, create Node-RED app and data dir, add user and set rights
+# Install tools, create Node-RED data dir, add user and set rights
 RUN set -ex && \
     apt-get update && apt-get install -y \
         bash \
@@ -82,6 +82,13 @@ RUN chown -R node-red:root /usr/src/node-red && \
 
 RUN npm config set cache /data/.npm --global
 RUN npm config set python `which python3` --global
+
+# following commands should assure that user node-red can use sudo without requiring to enter a password.
+RUN apt-get install -y sudo
+
+RUN echo "node-red ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+# get rid of the sudo error (see https://github.com/sudo-project/sudo/issues/42#issuecomment-609079906)
+RUN echo "Set disable_coredump false" >> /etc/sudo.conf
 
 USER node-red
 
