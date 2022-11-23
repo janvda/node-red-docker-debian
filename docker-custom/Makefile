@@ -1,6 +1,6 @@
 ARCH=amd64 
-NODE_VERSION=18
-OS=buster-slim
+NODE_VERSION=19.1.0
+OS=bullseye-slim
 NODE_RED_VERSION:=$(shell grep -oE "\"node-red\": \"(\w*.\w*.\w*.\w*.\w*.)" package.json | cut -d\" -f4)
 
 DOCKERHUB_ID:=janvda
